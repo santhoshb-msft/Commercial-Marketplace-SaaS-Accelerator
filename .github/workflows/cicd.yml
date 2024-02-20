@@ -49,23 +49,23 @@ jobs:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }} 
 
     # Run dotnet build and publish customer app
-    - name: Customer App build and publish
+    - name: Customer App build and create publish files
       run: |
         dotnet build ${{ env.CUSTOMER_PROJECT }} --configuration Release
         dotnet publish ${{ env.CUSTOMER_PROJECT }} --configuration Release --no-build --output ${{ env.CUSTOMER_AZURE_WEBAPP_PACKAGE_PATH }}
 
     # Run dotnet build and publish admin app
-    - name: Admin App build and publish
+    - name: Admin App build and create publish files
       run: |
         dotnet build ${{ env.PUBLISHER_PROJECT }} --configuration Release
         dotnet publish ${{ env.PUBLISHER_PROJECT }} --configuration Release --no-build --output ${{ env.PUBLISHER_AZURE_WEBAPP_PACKAGE_PATH }}
    
     # Run unit tests
-    - name: Run unit Test
+    - name: Run Unit Tests
       run: dotnet test ${{ env.SERVICES_TEST_PROJECT }}
   
     # Deploy to Azure Web app
-    - name: Customer App deploy to azure
+    - name: Customer App deploy to Azure
       uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ secrets.AZURE_CUSTOMER_WEBAPP_NAME }}
@@ -73,7 +73,7 @@ jobs:
         package: ${{ env.CUSTOMER_AZURE_WEBAPP_PACKAGE_PATH }}
 
     # Deploy to Azure Web app
-    - name: Admin App deploy azure
+    - name: Admin App deploy to Azure
       uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ secrets.AZURE_PUBLISHER_WEBAPP_NAME }}
